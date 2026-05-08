@@ -6,39 +6,99 @@
 <title>Course Hub Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #FFFFFF;
-  --bg-soft: #F7F8FB;
-  --navy: #0F1B2D;
+  --bg-soft: #F4F5F8;
+  --navy: #0A1322;
   --navy-mid: #1F2D44;
-  --navy-deep: #0A1322;
+  --navy-deep: #050B17;
   --gold: #D4A24C;
+  --gold-text: #6E5018;       /* AAA contrast on white (~7.5:1) */
   --gold-bright: #E5B45C;
   --terra: #C25A3E;
-  --terra-deep: #A84A30;
-  --ink: #0F1B2D;
-  --ink-soft: #283648;
-  --ink-muted: #5A6580;
-  --rule: #E4E7ED;
-  --rule-soft: #EFF1F5;
-  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --terra-text: #7A2F18;      /* AAA contrast on white (~9:1) */
+  --terra-deep: #5C2010;
+  --ink: #0A1322;             /* darker navy for max body text contrast */
+  --ink-soft: #14202F;        /* near-navy for descriptions */
+  --ink-muted: #3D4860;       /* darker than before for AAA labels */
+  --rule: #B8BEC8;
+  --rule-soft: #D4DAE2;
+  --sans: 'Plus Jakarta Sans', 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --display: 'Plus Jakarta Sans', 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
-  --shadow-card: 0 1px 3px rgba(15, 27, 44, 0.06), 0 1px 2px rgba(15, 27, 44, 0.04);
-  --shadow-card-hover: 0 8px 18px rgba(15, 27, 44, 0.12), 0 4px 6px rgba(15, 27, 44, 0.06);
+  --shadow-card: 0 1px 3px rgba(10, 19, 34, 0.10), 0 1px 2px rgba(10, 19, 34, 0.06);
+  --shadow-card-hover: 0 8px 18px rgba(10, 19, 34, 0.18), 0 4px 6px rgba(10, 19, 34, 0.10);
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* === GLOBAL ACCESSIBILITY === */
+em { font-style: normal; font-weight: 700; }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--gold-text);
+  outline-offset: 2px;
+}
+
+/* Visually hide content while keeping it available to screen readers */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip link, visible only when focused */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  z-index: 9999;
+  background: var(--navy);
+  color: white;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 14px 20px;
+  text-decoration: none;
+  border: 3px solid var(--gold-text);
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus { top: 8px; outline: none; }
+
+/* Honor reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hub-card:hover,
+  .hub-card:focus-visible {
+    transform: none !important;
+  }
+}
 html, body { background: var(--bg); }
 body {
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  font-weight: 400;
   min-height: 100vh;
 }
 
@@ -68,10 +128,10 @@ body {
   line-height: 1;
   color: var(--navy);
 }
-.brand-mark em { font-style: italic; font-weight: 400; color: var(--gold); }
+.brand-mark em { color: var(--terra-text); }
 .brand-tag {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--ink-muted);
@@ -79,7 +139,7 @@ body {
 .tabs { display: flex; gap: 0; }
 .tab {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -106,7 +166,7 @@ body {
 }
 .tab.tab-external:hover {
   background: var(--bg-soft);
-  color: var(--terra);
+  color: var(--terra-text);
   border-color: var(--rule);
 }
 
@@ -128,15 +188,15 @@ body {
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: var(--gold);
+  color: var(--gold-text);
 }
 .block-title {
   font-family: var(--display);
-  font-weight: 400;
+  font-weight: 700;
   font-size: clamp(26px, 3.4vw, 34px);
   color: var(--navy);
-  letter-spacing: -0.025em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 /* === FORMS === */
@@ -144,19 +204,20 @@ body {
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field-label {
   font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--ink-muted);
 }
 .input, .textarea, .select {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: 17px;
+  font-weight: 500;
   background: var(--bg);
-  border: 1px solid var(--rule);
+  border: 1.5px solid var(--rule);
   padding: 13px 14px;
-  color: var(--navy);
+  color: var(--ink);
   transition: border-color 0.18s var(--ease);
   width: 100%;
   border-radius: 0;
@@ -169,10 +230,65 @@ body {
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
 
+/* === BLOCK HELPER TEXT === */
+.block-helper {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 64ch;
+  margin-bottom: 22px;
+}
+
+/* === CATEGORY PILLS (custom sections) === */
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+}
+.category-pill button {
+  background: transparent;
+  border: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 0 2px;
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+.category-pill button:hover {
+  color: var(--terra-text);
+}
+.categories-add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  max-width: 520px;
+}
+@media (max-width: 720px) {
+  .categories-add { grid-template-columns: 1fr; }
+}
+
 /* === BUTTONS === */
 .btn {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -193,13 +309,13 @@ body {
   color: var(--ink-muted);
   cursor: pointer;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 4px 8px;
   transition: color 0.15s var(--ease);
 }
-.btn-icon:hover { color: var(--terra); }
+.btn-icon:hover { color: var(--terra-text); }
 .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
 
 /* === EDITOR ENTRY LIST === */
@@ -212,13 +328,13 @@ body {
 }
 .cat-head-title {
   font-family: var(--display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 18px;
   color: var(--navy);
 }
 .cat-head-count {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted);
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted);
 }
 .entry {
   display: grid;
@@ -232,29 +348,30 @@ body {
 .entry-num {
   font-family: var(--display);
   font-size: 26px;
-  font-weight: 300;
+  font-weight: 700;
   font-feature-settings: 'tnum';
-  color: var(--gold);
+  color: var(--gold-text);
   line-height: 1;
   padding-top: 2px;
 }
 .entry-title {
   font-family: var(--display);
-  font-weight: 500;
-  font-size: 18px;
-  letter-spacing: -0.01em;
-  margin-bottom: 4px;
-  color: var(--navy);
-  line-height: 1.25;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.005em;
+  margin-bottom: 6px;
+  color: var(--ink);
+  line-height: 1.3;
 }
 .entry-desc {
-  font-size: 15px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 4px;
+  font-size: 16px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 6px;
+  font-weight: 400;
 }
 .entry-link {
-  font-family: var(--mono); font-size: 11.5px;
-  color: var(--terra); text-decoration: none; word-break: break-all;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--terra-text); text-decoration: underline; word-break: break-all;
 }
-.entry-link:hover { color: var(--terra-deep); text-decoration: underline; }
+.entry-link:hover { color: var(--terra-deep); }
 .entry-actions { display: flex; gap: 4px; flex-shrink: 0; }
 
 /* === EMPTY STATES === */
@@ -264,10 +381,10 @@ body {
   color: var(--ink-muted);
 }
 .empty-mark {
-  font-family: var(--display); font-size: 80px; font-weight: 200; font-style: italic;
+  font-family: var(--display); font-size: 64px; font-weight: 400;
   color: var(--rule); line-height: 1; margin-bottom: 16px;
 }
-.empty-text { font-family: var(--display); font-style: italic; font-size: 16px; color: var(--ink-soft); }
+.empty-text { font-family: var(--display); font-size: 16px; color: var(--ink-soft); }
 
 /* ============================================ */
 /* === HUB / PUBLISHED OUTPUT (Card Grid) === */
@@ -281,27 +398,27 @@ body {
 }
 .hub-eyebrow {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--terra);
+  color: var(--terra-text);
   margin-bottom: 22px;
 }
 .hub-title {
   font-family: var(--display);
-  font-weight: 300;
-  font-size: clamp(42px, 7vw, 78px);
-  letter-spacing: -0.035em;
-  line-height: 0.98;
+  font-weight: 700;
+  font-size: clamp(40px, 6.5vw, 72px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
   margin-bottom: 24px;
   color: var(--navy);
 }
-.hub-title em { font-style: italic; font-weight: 400; color: var(--gold); }
+.hub-title em,
+.hub-title .hub-title-accent { color: var(--gold-text); font-weight: 700; }
 .hub-subtitle {
   font-family: var(--display);
-  font-weight: 300;
-  font-style: italic;
+  font-weight: 400;
   font-size: clamp(19px, 2vw, 23px);
   color: var(--ink-soft);
   max-width: 58ch;
@@ -313,10 +430,15 @@ body {
   font-family: var(--mono);
   text-transform: uppercase;
   letter-spacing: 0.18em;
+  margin: 0;
+  padding: 0;
 }
-.hub-meta-item { display: flex; flex-direction: column; gap: 4px; }
-.hub-meta-label { color: var(--ink-muted); font-size: 10px; }
-.hub-meta-value { color: var(--navy); font-size: 12.5px; }
+.hub-meta-item { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.hub-meta-label {
+  color: var(--ink-muted); font-size: 11.5px; font-weight: 700;
+  margin: 0;
+}
+.hub-meta-value { color: var(--navy); font-size: 13px; font-weight: 600; margin: 0; }
 
 /* Search */
 .hub-search-wrap {
@@ -331,14 +453,13 @@ body {
   padding: 16px 0 16px 32px;
   font-family: var(--display);
   font-size: 20px;
-  font-style: italic;
   color: var(--navy);
 }
-.hub-search:focus { outline: none; }
+.hub-search:focus { outline: 3px solid var(--gold-text); outline-offset: 2px; }
 .hub-search::placeholder { color: var(--ink-muted); }
 .hub-search-icon {
   position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  font-family: var(--mono); color: var(--gold); font-size: 16px;
+  font-family: var(--mono); color: var(--gold-text); font-size: 16px;
 }
 
 /* Section */
@@ -350,17 +471,17 @@ body {
 }
 .hub-section-title {
   font-family: var(--display);
-  font-weight: 400;
+  font-weight: 700;
   font-size: clamp(24px, 2.8vw, 30px);
   color: var(--navy);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .hub-section-count {
   font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11.5px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--ink-muted);
 }
 
@@ -369,7 +490,12 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
+.hub-grid > li { display: flex; margin: 0; padding: 0; }
+.hub-grid > li > .hub-card { flex: 1; }
 
 .hub-card {
   position: relative;
@@ -407,52 +533,68 @@ body {
 }
 .hub-card:hover::before { opacity: 1; }
 
+/* Keyboard focus parity with hover, plus visible focus ring */
+.hub-card:focus-visible {
+  background: var(--navy);
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  outline: 3px solid var(--gold-text);
+  outline-offset: 4px;
+}
+.hub-card:focus-visible::before { opacity: 1; }
+
 .hub-card-num {
   font-family: var(--display);
   font-size: 32px;
-  font-weight: 300;
-  color: var(--gold);
+  font-weight: 700;
+  color: var(--gold-text);
   line-height: 1;
   margin-bottom: 16px;
   font-feature-settings: 'tnum';
   transition: color 0.28s var(--ease);
 }
-.hub-card:hover .hub-card-num { color: var(--gold-bright); }
+.hub-card:hover .hub-card-num,
+.hub-card:focus-visible .hub-card-num { color: var(--gold-bright); }
 
 .hub-card-title {
   font-family: var(--display);
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
   margin-bottom: 12px;
+  color: var(--ink);
 }
 
 .hub-card-desc {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: 17px;
+  font-weight: 400;
   color: var(--ink-soft);
   line-height: 1.6;
   margin-bottom: 22px;
   flex-grow: 1;
   transition: color 0.28s var(--ease);
 }
-.hub-card:hover .hub-card-desc { color: rgba(255, 255, 255, 0.86); }
+.hub-card:hover .hub-card-desc,
+.hub-card:focus-visible .hub-card-desc { color: rgba(255, 255, 255, 0.92); }
 
 .hub-card-cta {
   font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--terra);
+  color: var(--terra-text);
   margin-top: auto;
   display: flex;
   align-items: center;
   gap: 8px;
   transition: color 0.28s var(--ease), gap 0.28s var(--ease);
 }
-.hub-card:hover .hub-card-cta {
+.hub-card:hover .hub-card-cta,
+.hub-card:focus-visible .hub-card-cta {
   color: var(--gold-bright);
   gap: 12px;
 }
@@ -462,7 +604,7 @@ body {
   padding-top: 32px;
   border-top: 1px solid var(--rule);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -487,21 +629,21 @@ body {
   font-size: 14.5px; color: var(--ink-soft); line-height: 1.65;
   max-width: 64ch; margin-bottom: 24px;
 }
-.export-prose strong { color: var(--navy); font-weight: 600; }
+.export-prose strong { color: var(--navy); font-weight: 700; }
 .export-prose code {
-  font-family: var(--mono); font-size: 12.5px;
-  background: var(--bg-soft); padding: 2px 6px; color: var(--terra);
+  font-family: var(--mono); font-size: 13px;
+  background: var(--bg-soft); padding: 2px 6px; color: var(--terra-text);
 }
 .help-pill {
   display: inline-block;
   font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   background: var(--gold);
   color: var(--navy);
-  padding: 4px 10px;
+  padding: 5px 12px;
   margin-right: 10px;
 }
 
@@ -578,6 +720,19 @@ body {
     <section class="block">
       <header class="block-head">
         <span class="block-num">02</span>
+        <h2 class="block-title">Sections</h2>
+      </header>
+      <p class="block-helper">Default sections cover most courses. Add custom ones like "Other Resources," "Office Hours," "Discussion Threads," "Final Project," or anything specific to your class. You can remove any section you don't need.</p>
+      <div id="categories-list" class="categories-list"></div>
+      <div class="categories-add">
+        <input class="input" id="new-category" placeholder="New section name" maxlength="40" aria-label="New section name">
+        <button class="btn btn-ghost" id="btn-add-category">Add Section</button>
+      </div>
+    </section>
+
+    <section class="block">
+      <header class="block-head">
+        <span class="block-num">03</span>
         <h2 class="block-title">Add an entry</h2>
       </header>
       <div class="field-group">
@@ -588,14 +743,7 @@ body {
           </div>
           <div class="field">
             <label class="field-label">Section</label>
-            <select class="select" id="entry-category">
-              <option>Lecture Videos</option>
-              <option>Lecture Notes</option>
-              <option>Assignments</option>
-              <option>Lab Materials</option>
-              <option>Kahoots</option>
-              <option>AI Tools</option>
-            </select>
+            <select class="select" id="entry-category"></select>
           </div>
           <div class="field">
             <label class="field-label">Number / Week</label>
@@ -620,7 +768,7 @@ body {
 
     <section class="block">
       <header class="block-head">
-        <span class="block-num">03</span>
+        <span class="block-num">04</span>
         <h2 class="block-title">Your entries</h2>
       </header>
       <div id="entries-container"></div>
@@ -636,7 +784,7 @@ body {
   <main id="tab-export" class="tab-pane hidden">
     <section class="block">
       <header class="block-head">
-        <span class="block-num">04</span>
+        <span class="block-num">05</span>
         <h2 class="block-title">Export your hub</h2>
       </header>
       <p class="export-prose">
@@ -653,7 +801,7 @@ body {
         <button class="btn btn-ghost" id="btn-load-config">Load Config (JSON)</button>
       </div>
       <div style="margin-top: 32px;">
-        <div style="font-family: var(--mono); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 4px;">Generated File Preview</div>
+        <div style="font-family: var(--mono); font-size: 11.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-muted); margin-bottom: 4px;">Generated File Preview</div>
         <pre class="export-output" id="export-preview">Click "Download Hub HTML" to generate your file.</pre>
       </div>
       <input type="file" id="config-file-input" accept=".json" class="hidden">
@@ -661,7 +809,7 @@ body {
 
     <section class="block">
       <header class="block-head">
-        <span class="block-num">05</span>
+        <span class="block-num">06</span>
         <h2 class="block-title">Publishing to Kajabi</h2>
       </header>
       <div class="export-prose">
@@ -675,11 +823,12 @@ body {
 
 <script>
 // ============ STATE ============
-const CATEGORIES = ['Lecture Videos', 'Lecture Notes', 'Assignments', 'Lab Materials', 'Kahoots', 'AI Tools'];
+const DEFAULT_CATEGORIES = ['Lecture Videos', 'Lecture Notes', 'Assignments', 'Lab Materials', 'Kahoots', 'AI Tools'];
 
 const state = {
   settings: { code: '', term: '', title: '', tagline: '', instructor: '', institution: '' },
-  entries: []
+  entries: [],
+  categories: [...DEFAULT_CATEGORIES]
 };
 
 // ============ TABS ============
@@ -757,6 +906,7 @@ document.getElementById('btn-load-demo').addEventListener('click', () => {
 });
 
 function loadDemo() {
+  state.categories = [...DEFAULT_CATEGORIES];
   state.settings = {
     code: 'PSYC 301',
     term: 'Fall 2026',
@@ -791,8 +941,82 @@ function loadDemo() {
     const el = document.getElementById('settings-' + k);
     if (el) el.value = state.settings[k] || '';
   });
+  renderCategories();
   renderEntries();
 }
+
+// ============ CATEGORY MANAGEMENT ============
+function renderCategories() {
+  const list = document.getElementById('categories-list');
+  if (state.categories.length === 0) {
+    list.innerHTML = `<span style="font-family: var(--sans); font-size: 15px; color: var(--ink-muted); font-style: normal;">No sections yet. Add one below to start organizing entries.</span>`;
+  } else {
+    list.innerHTML = state.categories.map((cat, i) => `
+      <span class="category-pill">
+        ${escapeHTML(cat)}
+        <button type="button" data-cat-idx="${i}" aria-label="Remove ${escapeHTML(cat)} section" title="Remove section">&times;</button>
+      </span>
+    `).join('');
+    list.querySelectorAll('button[data-cat-idx]').forEach(b => b.addEventListener('click', () => {
+      removeCategory(parseInt(b.dataset.catIdx, 10));
+    }));
+  }
+  // Sync the entry dropdown
+  const select = document.getElementById('entry-category');
+  if (select) {
+    const currentVal = select.value;
+    select.innerHTML = state.categories.map(c => `<option>${escapeHTML(c)}</option>`).join('');
+    if (state.categories.includes(currentVal)) select.value = currentVal;
+  }
+}
+
+function addCategory() {
+  const input = document.getElementById('new-category');
+  const name = input.value.trim();
+  if (!name) {
+    input.focus();
+    return;
+  }
+  if (state.categories.some(c => c.toLowerCase() === name.toLowerCase())) {
+    alert(`A section named "${name}" already exists.`);
+    input.focus();
+    return;
+  }
+  if (state.categories.length >= 12) {
+    alert('Maximum of 12 sections. Remove one before adding another.');
+    return;
+  }
+  state.categories.push(name);
+  input.value = '';
+  renderCategories();
+  input.focus();
+}
+
+function removeCategory(idx) {
+  if (state.categories.length <= 1) {
+    alert('You need at least one section to organize your entries.');
+    return;
+  }
+  const cat = state.categories[idx];
+  const entriesInCat = state.entries.filter(e => e.category === cat);
+  let confirmMsg = `Remove the "${cat}" section?`;
+  if (entriesInCat.length > 0) {
+    confirmMsg = `The "${cat}" section currently holds ${entriesInCat.length} ${entriesInCat.length === 1 ? 'entry' : 'entries'}. Removing the section will also delete ${entriesInCat.length === 1 ? 'that entry' : 'those entries'}. Continue?`;
+  }
+  if (!confirm(confirmMsg)) return;
+  state.categories.splice(idx, 1);
+  state.entries = state.entries.filter(e => e.category !== cat);
+  renderCategories();
+  renderEntries();
+}
+
+document.getElementById('btn-add-category').addEventListener('click', addCategory);
+document.getElementById('new-category').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addCategory();
+  }
+});
 
 // ============ RENDER ENTRIES (editor) ============
 function renderEntries() {
@@ -805,13 +1029,13 @@ function renderEntries() {
     return;
   }
   const grouped = {};
-  CATEGORIES.forEach(cat => grouped[cat] = []);
+  state.categories.forEach(cat => grouped[cat] = []);
   state.entries.forEach(e => {
     if (!grouped[e.category]) grouped[e.category] = [];
     grouped[e.category].push(e);
   });
   let html = '';
-  CATEGORIES.forEach(cat => {
+  state.categories.forEach(cat => {
     const list = grouped[cat] || [];
     if (list.length === 0) return;
     html += `<div class="cat-group">
@@ -860,65 +1084,79 @@ function buildHubInner(s) {
   const settings = s.settings;
   const entries = s.entries;
   const grouped = {};
-  CATEGORIES.forEach(cat => grouped[cat] = []);
+  state.categories.forEach(cat => grouped[cat] = []);
   entries.forEach(e => {
     if (!grouped[e.category]) grouped[e.category] = [];
     grouped[e.category].push(e);
   });
 
-  const sectionsHTML = CATEGORIES.map(cat => {
+  const slugify = (str) => 'sec-' + String(str).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  const sectionsHTML = state.categories.map(cat => {
     const list = grouped[cat] || [];
     if (list.length === 0) return '';
-    return `<section class="hub-section" data-category="${escapeAttr(cat)}">
+    const headingId = slugify(cat) + '-heading';
+    return `<section class="hub-section" data-category="${escapeAttr(cat)}" aria-labelledby="${headingId}">
       <header class="hub-section-head">
-        <h2 class="hub-section-title">${escapeHTML(cat)}</h2>
-        <div class="hub-section-count">${list.length} ${list.length === 1 ? 'entry' : 'entries'}</div>
+        <h2 class="hub-section-title" id="${headingId}">${escapeHTML(cat)}</h2>
+        <p class="hub-section-count">${list.length} ${list.length === 1 ? 'entry' : 'entries'}</p>
       </header>
-      <div class="hub-grid">
-        ${list.map(e => `
-          <a class="hub-card" href="${escapeAttr(e.url)}" target="_blank" rel="noopener">
-            <div class="hub-card-num">${escapeHTML(e.num) || '·'}</div>
-            <h3 class="hub-card-title">${escapeHTML(e.title)}</h3>
-            ${e.desc ? `<p class="hub-card-desc">${escapeHTML(e.desc)}</p>` : `<div class="hub-card-desc"></div>`}
-            <div class="hub-card-cta">View <span aria-hidden="true">&rarr;</span></div>
-          </a>
-        `).join('')}
-      </div>
+      <ul class="hub-grid" role="list">
+        ${list.map(e => {
+          const numText = e.num ? `${e.num}. ` : '';
+          const descText = e.desc ? `${e.desc}. ` : '';
+          const ariaLabel = `${numText}${e.title}. ${descText}Opens in new tab.`;
+          return `
+          <li>
+            <a class="hub-card" href="${escapeAttr(e.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeAttr(ariaLabel)}">
+              ${e.num ? `<span class="hub-card-num" aria-hidden="true">${escapeHTML(e.num)}</span>` : ''}
+              <h3 class="hub-card-title">${escapeHTML(e.title)}</h3>
+              ${e.desc ? `<p class="hub-card-desc">${escapeHTML(e.desc)}</p>` : ''}
+              <span class="hub-card-cta" aria-hidden="true">View <span>&rarr;</span></span>
+            </a>
+          </li>`;
+        }).join('')}
+      </ul>
     </section>`;
   }).join('');
 
   const titleStr = settings.title || 'Untitled Course';
   const escapedTitle = escapeHTML(titleStr);
   const titleHTML = escapedTitle.includes(' ')
-    ? escapedTitle.replace(/(\S+)$/, '<em>$1</em>')
-    : `<em>${escapedTitle}</em>`;
+    ? escapedTitle.replace(/(\S+)$/, '<span class="hub-title-accent">$1</span>')
+    : `<span class="hub-title-accent">${escapedTitle}</span>`;
 
   const eyebrowParts = [];
   if (settings.code) eyebrowParts.push(escapeHTML(settings.code));
   if (settings.term) eyebrowParts.push(escapeHTML(settings.term));
 
   return `
+    <a class="skip-link" href="#hub-main-content">Skip to main content</a>
     <div class="hub">
       <header class="hub-hero">
-        ${eyebrowParts.length ? `<div class="hub-eyebrow">${eyebrowParts.join(' · ')}</div>` : ''}
+        ${eyebrowParts.length ? `<p class="hub-eyebrow">${eyebrowParts.join(' &middot; ')}</p>` : ''}
         <h1 class="hub-title">${titleHTML}</h1>
         ${settings.tagline ? `<p class="hub-subtitle">${escapeHTML(settings.tagline)}</p>` : ''}
         ${(settings.instructor || settings.institution) ? `
-          <div class="hub-meta">
-            ${settings.instructor ? `<div class="hub-meta-item"><span class="hub-meta-label">Instructor</span><span class="hub-meta-value">${escapeHTML(settings.instructor)}</span></div>` : ''}
-            ${settings.institution ? `<div class="hub-meta-item"><span class="hub-meta-label">At</span><span class="hub-meta-value">${escapeHTML(settings.institution)}</span></div>` : ''}
-          </div>
+          <dl class="hub-meta">
+            ${settings.instructor ? `<div class="hub-meta-item"><dt class="hub-meta-label">Instructor</dt><dd class="hub-meta-value">${escapeHTML(settings.instructor)}</dd></div>` : ''}
+            ${settings.institution ? `<div class="hub-meta-item"><dt class="hub-meta-label">At</dt><dd class="hub-meta-value">${escapeHTML(settings.institution)}</dd></div>` : ''}
+          </dl>
         ` : ''}
       </header>
-      ${entries.length > 0 ? `
-        <div class="hub-search-wrap">
-          <span class="hub-search-icon">⌕</span>
-          <input class="hub-search" type="search" placeholder="Search the hub" aria-label="Search">
-        </div>
-      ` : ''}
-      ${entries.length === 0
-        ? `<div class="empty"><div class="empty-mark">∅</div><div class="empty-text">No entries yet. Add some in the Edit tab.</div></div>`
-        : sectionsHTML}
+      <main id="hub-main-content" tabindex="-1">
+        ${entries.length > 0 ? `
+          <div class="hub-search-wrap">
+            <span class="hub-search-icon" aria-hidden="true">&#x2384;</span>
+            <label for="hub-search-input" class="visually-hidden">Search the course hub</label>
+            <input class="hub-search" id="hub-search-input" type="search" placeholder="Search the hub" aria-describedby="hub-search-status">
+          </div>
+          <div id="hub-search-status" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+        ` : ''}
+        ${entries.length === 0
+          ? `<div class="empty"><div class="empty-mark" aria-hidden="true">&#8709;</div><p class="empty-text">No entries yet. Add some in the Edit tab.</p></div>`
+          : sectionsHTML}
+      </main>
       ${entries.length > 0 ? `<footer class="hub-footer">End of Hub</footer>` : ''}
     </div>
   `;
@@ -932,14 +1170,34 @@ function renderHub() {
 
 function filterHub(query, root) {
   const q = query.toLowerCase().trim();
+  let total = 0, visible = 0;
   root.querySelectorAll('.hub-card').forEach(el => {
-    const text = el.textContent.toLowerCase();
-    el.style.display = (!q || text.includes(q)) ? '' : 'none';
+    total++;
+    const li = el.parentElement;
+    const text = el.textContent.toLowerCase() + ' ' + (el.getAttribute('aria-label') || '').toLowerCase();
+    const show = !q || text.includes(q);
+    if (li && li.tagName === 'LI') li.style.display = show ? '' : 'none';
+    else el.style.display = show ? '' : 'none';
+    if (show) visible++;
   });
   root.querySelectorAll('.hub-section').forEach(sec => {
-    const visible = Array.from(sec.querySelectorAll('.hub-card')).filter(e => e.style.display !== 'none').length;
-    sec.style.display = visible ? '' : 'none';
+    const visibleCount = Array.from(sec.querySelectorAll('.hub-card')).filter(el => {
+      const li = el.parentElement;
+      return (li && li.tagName === 'LI' ? li.style.display : el.style.display) !== 'none';
+    }).length;
+    sec.style.display = visibleCount ? '' : 'none';
   });
+  // Announce results to screen readers
+  const status = root.querySelector('#hub-search-status');
+  if (status) {
+    if (!q) {
+      status.textContent = `Showing all ${total} ${total === 1 ? 'entry' : 'entries'}.`;
+    } else if (visible === 0) {
+      status.textContent = `No entries match "${query}".`;
+    } else {
+      status.textContent = `Showing ${visible} of ${total} ${total === 1 ? 'entry' : 'entries'} matching "${query}".`;
+    }
+  }
 }
 
 // ============ EXPORT ============
@@ -947,34 +1205,55 @@ function generateStandaloneHTML() {
   const cssText = Array.from(document.querySelectorAll('style')).map(s => s.textContent).join('\n');
   const fontsLink = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">`;
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">`;
 
   const hubHTML = buildHubInner(state);
 
   const filterScript = `
 (function(){
   const search = document.querySelector('.hub-search');
+  const status = document.querySelector('#hub-search-status');
   if (!search) return;
   search.addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase().trim();
+    let total = 0, visible = 0;
     document.querySelectorAll('.hub-card').forEach(el => {
-      const t = el.textContent.toLowerCase();
-      el.style.display = (!q || t.includes(q)) ? '' : 'none';
+      total++;
+      const li = el.parentElement;
+      const text = el.textContent.toLowerCase() + ' ' + (el.getAttribute('aria-label') || '').toLowerCase();
+      const show = !q || text.includes(q);
+      if (li && li.tagName === 'LI') li.style.display = show ? '' : 'none';
+      else el.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
     document.querySelectorAll('.hub-section').forEach(sec => {
-      const v = Array.from(sec.querySelectorAll('.hub-card')).filter(x => x.style.display !== 'none').length;
+      const v = Array.from(sec.querySelectorAll('.hub-card')).filter(x => {
+        const li = x.parentElement;
+        return (li && li.tagName === 'LI' ? li.style.display : x.style.display) !== 'none';
+      }).length;
       sec.style.display = v ? '' : 'none';
     });
+    if (status) {
+      if (!q) status.textContent = 'Showing all ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + '.';
+      else if (visible === 0) status.textContent = 'No entries match "' + e.target.value + '".';
+      else status.textContent = 'Showing ' + visible + ' of ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + ' matching "' + e.target.value + '".';
+    }
   });
 })();`;
 
   const titleTag = (state.settings.title || 'Course Hub') + (state.settings.code ? ' · ' + state.settings.code : '');
+
+  const desc = state.settings.tagline
+    ? state.settings.tagline.slice(0, 160)
+    : `Course hub for ${state.settings.title || 'the course'}`;
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="${escapeAttr(desc)}">
+<meta name="theme-color" content="#0A1322">
 <title>${escapeHTML(titleTag)}</title>
 ${fontsLink}
 <style>${cssText}
@@ -1009,17 +1288,64 @@ document.getElementById('btn-download').addEventListener('click', () => {
     : html;
 });
 
+// Robust clipboard helper: tries modern API, falls back to textarea+execCommand
+async function copyToClipboard(text) {
+  // Modern Clipboard API (works on https and localhost)
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      // Fall through to legacy method
+    }
+  }
+  // Legacy fallback: works on file://, http://, and older browsers
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '0';
+  textarea.style.left = '0';
+  textarea.style.width = '1px';
+  textarea.style.height = '1px';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, text.length);
+  let ok = false;
+  try {
+    ok = document.execCommand('copy');
+  } catch (err) {
+    ok = false;
+  }
+  document.body.removeChild(textarea);
+  return ok;
+}
+
 document.getElementById('btn-copy-html').addEventListener('click', async () => {
   const html = generateStandaloneHTML();
-  try {
-    await navigator.clipboard.writeText(html);
-    const btn = document.getElementById('btn-copy-html');
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copied';
-    setTimeout(() => btn.textContent = orig, 1800);
-  } catch {
-    alert('Could not copy automatically. Try the download button.');
+  const btn = document.getElementById('btn-copy-html');
+  const orig = btn.textContent;
+  const success = await copyToClipboard(html);
+  if (success) {
+    btn.textContent = '\u2713 Copied to Clipboard';
+    btn.style.background = 'var(--terra-text)';
+    btn.style.color = 'white';
+    btn.style.borderColor = 'var(--terra-text)';
+  } else {
+    btn.textContent = 'Copy Failed. Try Download Instead.';
+    btn.style.background = '#8E1A1A';
+    btn.style.color = 'white';
+    btn.style.borderColor = '#8E1A1A';
   }
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2200);
 });
 
 document.getElementById('btn-save-config').addEventListener('click', () => {
@@ -1043,12 +1369,23 @@ document.getElementById('config-file-input').addEventListener('change', (e) => {
       const loaded = JSON.parse(ev.target.result);
       state.settings = Object.assign({ code:'', term:'', title:'', tagline:'', instructor:'', institution:'' }, loaded.settings || {});
       state.entries = Array.isArray(loaded.entries) ? loaded.entries : [];
+      // Restore categories; if old config didn't have them, infer from entries or use defaults
+      if (Array.isArray(loaded.categories) && loaded.categories.length > 0) {
+        state.categories = loaded.categories;
+      } else {
+        // Backward compatibility: build from entries' categories + defaults
+        const used = [...new Set(state.entries.map(e => e.category).filter(Boolean))];
+        const merged = [...DEFAULT_CATEGORIES];
+        used.forEach(c => { if (!merged.includes(c)) merged.push(c); });
+        state.categories = merged;
+      }
       Object.keys(state.settings).forEach(k => {
         const el = document.getElementById('settings-' + k);
         if (el) el.value = state.settings[k] || '';
       });
+      renderCategories();
       renderEntries();
-      alert('Loaded ' + state.entries.length + ' entries.');
+      alert('Loaded ' + state.entries.length + ' ' + (state.entries.length === 1 ? 'entry' : 'entries') + ' across ' + state.categories.length + ' ' + (state.categories.length === 1 ? 'section' : 'sections') + '.');
     } catch {
       alert('Could not parse JSON file.');
     }
@@ -1063,6 +1400,7 @@ function escapeHTML(s) {
 function escapeAttr(s) { return escapeHTML(s); }
 
 // ============ INIT ============
+renderCategories();
 renderEntries();
 </script>
 </body>
