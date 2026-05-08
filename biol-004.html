@@ -555,21 +555,21 @@ body {
       </header>
       <div class="hub-grid">
         
-          <a class="hub-card" href="&lt;a href=&quot;https://drsrennie-stack.github.io/Solano-Anatomy-/renal-anatomy.html&quot; target=&quot;_top&quot;&gt;Renal Anatomy&lt;/a&gt;" target="_blank" rel="noopener">
+          <a class="hub-card" href="https://drsrennie-stack.github.io/Solano-Anatomy-/renal-anatomy.html" target="_top">
             <div class="hub-card-num">Module 5</div>
             <h3 class="hub-card-title">Renal Anatomy Hub</h3>
             <p class="hub-card-desc">This is the entire renal anatomy hub. It should have videos, notes and kahoots.</p>
             <div class="hub-card-cta">View <span aria-hidden="true">&rarr;</span></div>
           </a>
         
-          <a class="hub-card" href="&lt;a href=&quot;https://drsrennie-stack.github.io/Solano-Anatomy-/nervous-system-anatomy.html&quot; target=&quot;_top&quot;&gt;Nervous System Anatomy&lt;/a&gt;" target="_blank" rel="noopener">
+          <a class="hub-card" href="https://drsrennie-stack.github.io/Solano-Anatomy-/nervous-system-anatomy.html" target="_top">
             <div class="hub-card-num">Module 5</div>
             <h3 class="hub-card-title">Nervous System Hub</h3>
             <p class="hub-card-desc">This is the entire nervous system Hub with videos, kahoots, notes and helpful tools</p>
             <div class="hub-card-cta">View <span aria-hidden="true">&rarr;</span></div>
           </a>
         
-          <a class="hub-card" href="&lt;a href=&quot;https://drsrennie-stack.github.io/Solano-Anatomy-/reproductive-anatomy.html&quot; target=&quot;_top&quot;&gt;Reproductive Anatomy&lt;/a&gt;" target="_blank" rel="noopener">
+          <a class="hub-card" href="https://drsrennie-stack.github.io/Solano-Anatomy-/reproductive-anatomy.html" target="_top">
             <div class="hub-card-num">Module 5</div>
             <h3 class="hub-card-title">Reproductive Anatomy Hub</h3>
             <p class="hub-card-desc">This is the entire Reproductive Anatomy Hub with the videos, notes, kahoots and other helpful resources.</p>
@@ -584,7 +584,7 @@ body {
       </header>
       <div class="hub-grid">
         
-          <a class="hub-card" href="&lt;a href=&quot;https://drsrennie-stack.github.io/Solano-Anatomy-/nephron_map_checklist.html&quot; target=&quot;_top&quot;&gt;Nephron Map Checklist&lt;/a&gt;" target="_blank" rel="noopener">
+          <a class="hub-card" href="https://drsrennie-stack.github.io/Solano-Anatomy-/nephron_map_checklist.html" target="_top">
             <div class="hub-card-num">Module 5</div>
             <h3 class="hub-card-title">Nephron Map Checklist</h3>
             <div class="hub-card-desc"></div>
@@ -599,7 +599,7 @@ body {
       </header>
       <div class="hub-grid">
         
-          <a class="hub-card" href="&lt;a href=&quot;https://drsrennie-stack.github.io/Solano-Anatomy-/module-5-Structurelist.html&quot; target=&quot;_top&quot;&gt;Module 5 Structure List&lt;/a&gt;" target="_blank" rel="noopener">
+          <a class="hub-card" href="https://drsrennie-stack.github.io/Solano-Anatomy-/module-5-Structurelist.html" target="_top">
             <div class="hub-card-num">Module 5</div>
             <h3 class="hub-card-title">Structure List</h3>
             <div class="hub-card-desc"></div>
@@ -634,6 +634,31 @@ body {
       sec.style.display = v ? '' : 'none';
     });
   });
-})();</script>
+})();
+</script>
+<script>
+/* Kajabi iframe height-sender */
+(function(){
+  var frameId = 'biol004-hub';
+  function sendHeight(){
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    try {
+      window.parent.postMessage({ type: 'resize-iframe', id: frameId, height: h }, '*');
+    } catch(e){}
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+  setTimeout(sendHeight, 200);
+  setTimeout(sendHeight, 800);
+})();
+</script>
 </body>
 </html>
