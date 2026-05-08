@@ -74,6 +74,33 @@ body {
   color: var(--ink-muted);
 }
 
+/* === DOC UTILITY (back link + print button) === */
+.doc-utility {
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.doc-utility a,
+.doc-utility button {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.18s var(--ease);
+}
+.doc-utility a:hover,
+.doc-utility button:hover {
+  color: var(--terra);
+}
+
 /* === HERO === */
 .hero { padding-bottom: 56px; border-bottom: 1px solid var(--rule); margin-bottom: 64px; }
 .hero-eyebrow {
@@ -360,6 +387,21 @@ pre.code-block {
 }
 .faq-a strong { color: var(--navy); }
 
+/* === OPTIONAL TAG === */
+.optional-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  vertical-align: 4px;
+  margin-left: 12px;
+  padding: 3px 9px;
+  border: 1px solid var(--gold);
+}
+
 /* === DOC FOOTER === */
 .doc-foot {
   margin-top: 96px;
@@ -389,12 +431,21 @@ pre.code-block {
 
 /* === PRINT === */
 @media print {
-  body { font-size: 11pt; }
-  .toc, a.prereq:hover { transform: none; box-shadow: none; }
+  body { font-size: 11pt; color: #000; background: white; }
+  .doc-utility, .toc { display: none !important; }
+  a.prereq:hover { transform: none; box-shadow: none; }
   .step, .phase, .faq { break-inside: avoid; }
   .phase-head { break-after: avoid; }
   pre.code-block, code { background: white; color: var(--navy); border: 1px solid var(--rule); }
   .page { padding: 0; max-width: none; }
+  .doc-top { border-bottom: 2px solid var(--navy); padding-bottom: 14px; }
+  .hero { padding-bottom: 32px; margin-bottom: 32px; }
+  .hero-title { font-size: 32pt; }
+  .phase-title { font-size: 22pt; }
+  .step-title { font-size: 14pt; }
+  .step-num { font-size: 32pt; }
+  a { color: var(--navy); text-decoration: none; }
+  .doc-foot { margin-top: 48px; }
 }
 
 /* === RESPONSIVE === */
@@ -414,7 +465,11 @@ pre.code-block {
 
   <header class="doc-top">
     <span class="doc-mark">Hub<em>Builder</em> &middot; Setup Guide</span>
-    <span class="doc-version">v1.0 &middot; For Instructors</span>
+    <div class="doc-utility">
+      <a href="course-hub-builder.html">&larr; Back to Builder</a>
+      <button type="button" onclick="window.print()">Print Guide &#x2398;</button>
+      <span class="doc-version">v1.0</span>
+    </div>
   </header>
 
   <!-- ============ HERO ============ -->
@@ -610,34 +665,35 @@ pre.code-block {
     <header class="phase-head">
       <div class="phase-eyebrow">Phase 03 of 03</div>
       <h2 class="phase-title">Share it.</h2>
-      <p class="phase-lede">A QR code on the syllabus, the first slide of every lecture, the office door. Same code, every term, until you change the URL.</p>
+      <p class="phase-lede">Send the URL however suits your course. Pasting it into the syllabus, an email, or your LMS page is the fast path. A QR code is an optional extra for in-person classes where students will scan from a slide or a printed sheet.</p>
     </header>
 
     <div class="step">
       <div class="step-num">11</div>
       <div class="step-body">
-        <h3 class="step-title">Generate a QR code.</h3>
-        <p>Use any free QR generator. Three reliable options:</p>
-        <p><strong>qrcode.show</strong> &middot; type your URL after the slash, like <code>qrcode.show/yourname.github.io/psyc-301</code>, and the QR appears instantly.<br>
-        <strong>Chrome's built-in tool</strong> &middot; right-click the address bar on your hub page and select "Create QR code".<br>
-        <strong>qr-code-generator.com</strong> &middot; paste your URL, download the PNG.</p>
+        <h3 class="step-title">Choose how to share.</h3>
+        <p>The simplest path is the URL itself. Paste it wherever students already look: the syllabus, a welcome email, your LMS or Kajabi course page, an opening announcement. That's enough on its own.</p>
+        <p>If you teach in person and want students to reach the hub from a phone camera, a QR code is a small extra step that pays off every class meeting. The next step covers how, and you can safely skip it if the URL alone fits your workflow.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">12</div>
       <div class="step-body">
-        <h3 class="step-title">Put the QR everywhere.</h3>
-        <p>Drop it on the syllabus. The first slide of every lecture. The back of a printed handout. Your office door. Inside the front cover of the lab manual.</p>
-        <p>The QR encodes the URL itself. As long as the URL stays the same, the same QR keeps working forever. No expiration. No per-scan cost. No tracking pixel.</p>
+        <h3 class="step-title">Generate a QR code <span class="optional-tag">Optional</span></h3>
+        <p>If you'd like a QR, three reliable free generators:</p>
+        <p><strong>qrcode.show</strong> &middot; type your URL after the slash, like <code>qrcode.show/yourname.github.io/psyc-301</code>, and the QR appears instantly.<br>
+        <strong>Chrome's built-in tool</strong> &middot; right-click the address bar on your hub page and select "Create QR code".<br>
+        <strong>qr-code-generator.com</strong> &middot; paste your URL, download the PNG.</p>
+        <p>Drop the QR onto the first slide of every lecture, the syllabus, the back of a printed handout, your office door. The QR encodes the URL itself, so as long as the URL stays the same, the same QR keeps working forever. No expiration, no per-scan cost, no tracking.</p>
       </div>
     </div>
 
     <div class="step">
       <div class="step-num">13</div>
       <div class="step-body">
-        <h3 class="step-title">Tell students how to use it.</h3>
-        <p>"Scan the QR. Tap a card. The link opens." That's the entire instruction set. No app, no login, no account, no software to install.</p>
+        <h3 class="step-title">Tell students how to find it.</h3>
+        <p>If you shared the URL, they click. If you posted a QR, they scan it with their phone camera. Either way, the next instruction is the same: tap a card, the link opens. No app, no login, no account, no software to install.</p>
       </div>
     </div>
   </section>
