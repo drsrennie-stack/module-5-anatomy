@@ -98,6 +98,17 @@ body {
   color: white;
   border-color: var(--navy);
 }
+.tab.tab-external {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-muted);
+}
+.tab.tab-external:hover {
+  background: var(--bg-soft);
+  color: var(--terra);
+  border-color: var(--rule);
+}
 
 /* === EDITOR BLOCKS === */
 .block {
@@ -521,6 +532,7 @@ body {
       <button class="tab active" data-tab="edit">Edit</button>
       <button class="tab" data-tab="preview">Preview</button>
       <button class="tab" data-tab="export">Export</button>
+      <a class="tab tab-external" href="course-hub-setup-guide.html" target="_blank" rel="noopener" title="Open the setup guide in a new tab">Guide &nearr;</a>
     </nav>
   </header>
 
