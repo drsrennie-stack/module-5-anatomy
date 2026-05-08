@@ -485,6 +485,136 @@ body {
   color: var(--ink-muted);
 }
 
+/* === HUB LAYOUT (sidebar nav + content) === */
+.hub-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 56px;
+  margin-top: 8px;
+}
+
+.hub-nav {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+.hub-nav-heading {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-muted);
+  padding: 0 16px 14px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 8px;
+}
+
+.hub-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hub-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+
+.hub-nav-btn:hover {
+  background: var(--bg-soft);
+  color: var(--navy);
+}
+
+.hub-nav-btn[aria-pressed="true"] {
+  background: var(--bg-soft);
+  color: var(--navy);
+  border-left-color: var(--terra-text);
+  font-weight: 700;
+}
+
+.hub-nav-btn:focus-visible {
+  outline: 3px solid var(--gold-text);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.hub-nav-count {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  background: white;
+  padding: 3px 9px;
+  border: 1px solid var(--rule);
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.hub-nav-btn[aria-pressed="true"] .hub-nav-count {
+  color: var(--terra-text);
+  border-color: var(--terra-text);
+}
+
+/* Mobile: collapse sidebar into horizontal scrollable pill bar */
+@media (max-width: 900px) {
+  .hub-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .hub-nav {
+    position: relative;
+    top: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+  .hub-nav-heading {
+    border-bottom: none;
+    padding: 0 0 12px;
+    margin-bottom: 4px;
+  }
+  .hub-nav-list {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 6px;
+    margin: 0 -22px;
+    padding-left: 22px;
+    padding-right: 22px;
+    scrollbar-width: thin;
+  }
+  .hub-nav-btn {
+    flex-shrink: 0;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .hub-nav-btn[aria-pressed="true"] {
+    border-left: none;
+    border-bottom-color: var(--terra-text);
+  }
+}
+
 /* Card grid */
 .hub-grid {
   display: grid;
@@ -1104,9 +1234,11 @@ function buildHubInner(s) {
 
   const slugify = (str) => 'sec-' + String(str).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-  const sectionsHTML = state.categories.map(cat => {
+  // Only categories with at least one entry
+  const populatedCategories = state.categories.filter(cat => (grouped[cat] || []).length > 0);
+
+  const sectionsHTML = populatedCategories.map(cat => {
     const list = grouped[cat] || [];
-    if (list.length === 0) return '';
     const headingId = slugify(cat) + '-heading';
     return `<section class="hub-section" data-category="${escapeAttr(cat)}" aria-labelledby="${headingId}">
       <header class="hub-section-head">
@@ -1132,6 +1264,19 @@ function buildHubInner(s) {
     </section>`;
   }).join('');
 
+  // Build vertical filter nav (only if 2+ populated categories)
+  const navHTML = populatedCategories.length >= 2 ? `
+    <nav class="hub-nav" aria-label="Course sections">
+      <p class="hub-nav-heading">Sections</p>
+      <ul class="hub-nav-list" role="list">
+        <li><button type="button" class="hub-nav-btn" data-filter="all" aria-pressed="true">All <span class="hub-nav-count">${entries.length}</span></button></li>
+        ${populatedCategories.map(cat => `
+          <li><button type="button" class="hub-nav-btn" data-filter="${escapeAttr(cat)}" aria-pressed="false">${escapeHTML(cat)} <span class="hub-nav-count">${grouped[cat].length}</span></button></li>
+        `).join('')}
+      </ul>
+    </nav>
+  ` : '';
+
   const titleStr = settings.title || 'Untitled Course';
   const escapedTitle = escapeHTML(titleStr);
   const titleHTML = escapedTitle.includes(' ')
@@ -1141,6 +1286,10 @@ function buildHubInner(s) {
   const eyebrowParts = [];
   if (settings.code) eyebrowParts.push(escapeHTML(settings.code));
   if (settings.term) eyebrowParts.push(escapeHTML(settings.term));
+
+  const layoutInner = navHTML
+    ? `<div class="hub-layout">${navHTML}<div class="hub-content">${sectionsHTML}</div></div>`
+    : sectionsHTML;
 
   return `
     <a class="skip-link" href="#hub-main-content">Skip to main content</a>
@@ -1167,7 +1316,7 @@ function buildHubInner(s) {
         ` : ''}
         ${entries.length === 0
           ? `<div class="empty"><div class="empty-mark" aria-hidden="true">&#8709;</div><p class="empty-text">No entries yet. Add some in the Edit tab.</p></div>`
-          : sectionsHTML}
+          : layoutInner}
       </main>
       ${entries.length > 0 ? `<footer class="hub-footer">End of Hub</footer>` : ''}
     </div>
@@ -1176,14 +1325,53 @@ function buildHubInner(s) {
 
 function renderHub() {
   document.getElementById('hub-render').innerHTML = buildHubInner(state);
-  const search = document.querySelector('#hub-render .hub-search');
-  if (search) search.addEventListener('input', (e) => filterHub(e.target.value, document.getElementById('hub-render')));
+  const root = document.getElementById('hub-render');
+  const search = root.querySelector('.hub-search');
+  if (search) search.addEventListener('input', (e) => filterHub(e.target.value, root));
+  setupHubNav(root);
+}
+
+function setupHubNav(root) {
+  const buttons = root.querySelectorAll('.hub-nav-btn');
+  if (buttons.length === 0) return;
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      buttons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      root.querySelectorAll('.hub-section').forEach(sec => {
+        sec.style.display = (filter === 'all' || sec.dataset.category === filter) ? '' : 'none';
+      });
+      // Reset search when changing filter
+      const search = root.querySelector('.hub-search');
+      if (search && search.value) {
+        search.value = '';
+        root.querySelectorAll('.hub-card').forEach(el => {
+          const li = el.parentElement;
+          if (li && li.tagName === 'LI') li.style.display = '';
+          else el.style.display = '';
+        });
+      }
+      // Announce
+      const status = root.querySelector('#hub-search-status');
+      if (status) {
+        const label = btn.textContent.replace(/\s+\d+$/, '').trim();
+        status.textContent = filter === 'all' ? 'Showing all sections.' : `Showing ${label} section only.`;
+      }
+    });
+  });
 }
 
 function filterHub(query, root) {
   const q = query.toLowerCase().trim();
   let total = 0, visible = 0;
+  // Helper: only count cards whose section is currently displayed
+  const sectionVisible = (el) => {
+    let p = el.parentElement;
+    while (p && !p.classList.contains('hub-section')) p = p.parentElement;
+    return !p || p.style.display !== 'none';
+  };
   root.querySelectorAll('.hub-card').forEach(el => {
+    if (!sectionVisible(el)) return;
     total++;
     const li = el.parentElement;
     const text = el.textContent.toLowerCase() + ' ' + (el.getAttribute('aria-label') || '').toLowerCase();
@@ -1191,13 +1379,6 @@ function filterHub(query, root) {
     if (li && li.tagName === 'LI') li.style.display = show ? '' : 'none';
     else el.style.display = show ? '' : 'none';
     if (show) visible++;
-  });
-  root.querySelectorAll('.hub-section').forEach(sec => {
-    const visibleCount = Array.from(sec.querySelectorAll('.hub-card')).filter(el => {
-      const li = el.parentElement;
-      return (li && li.tagName === 'LI' ? li.style.display : el.style.display) !== 'none';
-    }).length;
-    sec.style.display = visibleCount ? '' : 'none';
   });
   // Announce results to screen readers
   const status = root.querySelector('#hub-search-status');
@@ -1225,31 +1406,58 @@ function generateStandaloneHTML() {
 (function(){
   const search = document.querySelector('.hub-search');
   const status = document.querySelector('#hub-search-status');
-  if (!search) return;
-  search.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase().trim();
-    let total = 0, visible = 0;
-    document.querySelectorAll('.hub-card').forEach(el => {
-      total++;
-      const li = el.parentElement;
-      const text = el.textContent.toLowerCase() + ' ' + (el.getAttribute('aria-label') || '').toLowerCase();
-      const show = !q || text.includes(q);
-      if (li && li.tagName === 'LI') li.style.display = show ? '' : 'none';
-      else el.style.display = show ? '' : 'none';
-      if (show) visible++;
+  const navButtons = document.querySelectorAll('.hub-nav-btn');
+
+  function sectionVisible(el) {
+    let p = el.parentElement;
+    while (p && !p.classList.contains('hub-section')) p = p.parentElement;
+    return !p || p.style.display !== 'none';
+  }
+
+  // Search behavior
+  if (search) {
+    search.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      let total = 0, visible = 0;
+      document.querySelectorAll('.hub-card').forEach(el => {
+        if (!sectionVisible(el)) return;
+        total++;
+        const li = el.parentElement;
+        const text = el.textContent.toLowerCase() + ' ' + (el.getAttribute('aria-label') || '').toLowerCase();
+        const show = !q || text.includes(q);
+        if (li && li.tagName === 'LI') li.style.display = show ? '' : 'none';
+        else el.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (status) {
+        if (!q) status.textContent = 'Showing all ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + '.';
+        else if (visible === 0) status.textContent = 'No entries match "' + e.target.value + '".';
+        else status.textContent = 'Showing ' + visible + ' of ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + ' matching "' + e.target.value + '".';
+      }
     });
-    document.querySelectorAll('.hub-section').forEach(sec => {
-      const v = Array.from(sec.querySelectorAll('.hub-card')).filter(x => {
-        const li = x.parentElement;
-        return (li && li.tagName === 'LI' ? li.style.display : x.style.display) !== 'none';
-      }).length;
-      sec.style.display = v ? '' : 'none';
+  }
+
+  // Sidebar filter behavior
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      navButtons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      document.querySelectorAll('.hub-section').forEach(sec => {
+        sec.style.display = (filter === 'all' || sec.dataset.category === filter) ? '' : 'none';
+      });
+      if (search && search.value) {
+        search.value = '';
+        document.querySelectorAll('.hub-card').forEach(el => {
+          const li = el.parentElement;
+          if (li && li.tagName === 'LI') li.style.display = '';
+          else el.style.display = '';
+        });
+      }
+      if (status) {
+        const label = btn.textContent.replace(/\\s+\\d+$/, '').trim();
+        status.textContent = filter === 'all' ? 'Showing all sections.' : 'Showing ' + label + ' section only.';
+      }
     });
-    if (status) {
-      if (!q) status.textContent = 'Showing all ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + '.';
-      else if (visible === 0) status.textContent = 'No entries match "' + e.target.value + '".';
-      else status.textContent = 'Showing ' + visible + ' of ' + total + ' ' + (total === 1 ? 'entry' : 'entries') + ' matching "' + e.target.value + '".';
-    }
   });
 })();`;
 
