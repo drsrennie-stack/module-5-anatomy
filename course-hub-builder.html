@@ -565,7 +565,10 @@ body {
   line-height: 1.3;
   margin-bottom: 12px;
   color: var(--ink);
+  transition: color 0.28s var(--ease);
 }
+.hub-card:hover .hub-card-title,
+.hub-card:focus-visible .hub-card-title { color: white; }
 
 .hub-card-desc {
   font-family: var(--sans);
