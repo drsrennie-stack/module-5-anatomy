@@ -19,6 +19,7 @@
   --gold-bright: #E5B45C;
   --terra: #C25A3E;
   --terra-text: #7A2F18;      /* AAA contrast on white (~9:1) */
+  --terra-bright: #E59575;    /* lighter terra for use on navy backgrounds */
   --terra-deep: #5C2010;
   --ink: #0A1322;             /* darker navy for max body text contrast */
   --ink-soft: #14202F;        /* near-navy for descriptions */
@@ -415,7 +416,7 @@ body {
   color: var(--navy);
 }
 .hub-title em,
-.hub-title .hub-title-accent { color: var(--gold-text); font-weight: 700; }
+.hub-title .hub-title-accent { color: var(--terra-text); font-weight: 700; }
 .hub-subtitle {
   font-family: var(--display);
   font-weight: 400;
@@ -459,7 +460,7 @@ body {
 .hub-search::placeholder { color: var(--ink-muted); }
 .hub-search-icon {
   position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  font-family: var(--mono); color: var(--gold-text); font-size: 16px;
+  font-family: var(--mono); color: var(--terra-text); font-size: 16px;
 }
 
 /* Section */
@@ -650,7 +651,7 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: var(--gold);
+  background: var(--terra-bright);
   opacity: 0;
   transition: opacity 0.28s var(--ease);
 }
@@ -678,14 +679,14 @@ body {
   font-family: var(--display);
   font-size: 32px;
   font-weight: 700;
-  color: var(--gold-text);
+  color: var(--terra-text);
   line-height: 1;
   margin-bottom: 16px;
   font-feature-settings: 'tnum';
   transition: color 0.28s var(--ease);
 }
 .hub-card:hover .hub-card-num,
-.hub-card:focus-visible .hub-card-num { color: var(--gold-bright); }
+.hub-card:focus-visible .hub-card-num { color: var(--terra-bright); }
 
 .hub-card-title {
   font-family: var(--display);
@@ -728,7 +729,7 @@ body {
 }
 .hub-card:hover .hub-card-cta,
 .hub-card:focus-visible .hub-card-cta {
-  color: var(--gold-bright);
+  color: var(--terra-bright);
   gap: 12px;
 }
 
