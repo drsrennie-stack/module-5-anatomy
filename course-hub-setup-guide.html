@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Hub. A Setup Guide.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg-soft: #F7F8FB;
+  --navy: #0F1B2D;
+  --navy-mid: #1F2D44;
+  --gold: #D4A24C;
+  --gold-bright: #E5B45C;
+  --terra: #C25A3E;
+  --terra-deep: #A84A30;
+  --ink: #0F1B2D;
+  --ink-soft: #283648;
+  --ink-muted: #5A6580;
+  --rule: #E4E7ED;
+  --rule-soft: #EFF1F5;
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --shadow-card: 0 1px 3px rgba(15, 27, 44, 0.06), 0 1px 2px rgba(15, 27, 44, 0.04);
+  --shadow-card-hover: 0 8px 18px rgba(15, 27, 44, 0.12), 0 4px 6px rgba(15, 27, 44, 0.06);
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); }
+body {
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 40px 96px;
+}
+
+/* === DOC TOP === */
+.doc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 64px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.doc-mark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.025em;
+  color: var(--navy);
+}
+.doc-mark em { font-style: italic; font-weight: 400; color: var(--gold); }
+.doc-version {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+
+/* === HERO === */
+.hero { padding-bottom: 56px; border-bottom: 1px solid var(--rule); margin-bottom: 64px; }
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--terra);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(44px, 7vw, 80px);
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  color: var(--navy);
+  margin-bottom: 28px;
+}
+.hero-title em { font-style: italic; font-weight: 400; color: var(--gold); }
+.hero-lede {
+  font-family: var(--display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(18px, 1.9vw, 22px);
+  color: var(--ink-soft);
+  max-width: 56ch;
+  line-height: 1.45;
+  margin-bottom: 36px;
+}
+.hero-stats {
+  display: flex; gap: 40px; flex-wrap: wrap;
+}
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+  display: block;
+}
+.hero-stat-value {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--navy);
+  letter-spacing: -0.015em;
+}
+
+/* === TOC === */
+.toc {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+  padding: 16px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  align-items: center;
+}
+.toc a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color 0.18s var(--ease);
+}
+.toc a:hover { color: var(--terra); }
+.toc-sep { color: var(--gold); font-weight: 500; }
+
+/* === PREREQUISITES (cards) === */
+.prereqs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 80px;
+}
+.prereq {
+  background: var(--bg);
+  padding: 24px 22px;
+  text-decoration: none;
+  color: var(--navy);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease);
+}
+a.prereq:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-hover); }
+.prereq-num {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.prereq-title {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--navy);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.prereq-desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-top: auto;
+}
+.prereq-link {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--terra);
+  margin-top: 12px;
+}
+
+/* === PHASE === */
+.phase { margin-bottom: 80px; }
+.phase-head {
+  margin-bottom: 48px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--navy);
+}
+.phase-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.phase-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 48px);
+  color: var(--navy);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.phase-lede {
+  font-family: var(--sans);
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+/* === STEP === */
+.step {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  align-items: start;
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-family: var(--display);
+  font-size: 60px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 0.9;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.02em;
+}
+.step-body { padding-top: 6px; }
+.step-title {
+  font-family: var(--display);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 500;
+  color: var(--navy);
+  margin-bottom: 12px;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.step-body p {
+  color: var(--ink-soft);
+  font-size: 16.5px;
+  line-height: 1.7;
+  max-width: 62ch;
+  margin-bottom: 14px;
+}
+.step-body p:last-child { margin-bottom: 0; }
+.step-body strong { color: var(--navy); font-weight: 600; }
+.step-body em { font-style: italic; }
+
+/* === INLINE CODE / URL === */
+code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--navy);
+  color: var(--gold-bright);
+  padding: 2px 7px;
+  word-break: break-word;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+pre.code-block {
+  background: var(--navy);
+  color: var(--gold-bright);
+  padding: 18px 22px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  margin: 18px 0;
+  overflow-x: auto;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+/* === CALLOUT === */
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  background: white;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--gold);
+  padding: 14px 20px;
+  margin: 18px 0;
+  align-items: start;
+}
+.callout-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  padding-top: 4px;
+}
+.callout-body {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.callout-body strong { color: var(--navy); }
+
+.callout-warn { border-left-color: var(--terra); }
+.callout-warn .callout-label { color: var(--terra); }
+
+/* === FAQ === */
+.faq-list { margin-top: 8px; }
+.faq {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.faq:last-child { border-bottom: none; }
+.faq-q {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--navy);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.faq-q::before {
+  content: 'Q';
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--terra);
+  margin-right: 12px;
+  vertical-align: 4px;
+  letter-spacing: 0.1em;
+}
+.faq-a {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.7;
+  padding-left: 26px;
+  max-width: 62ch;
+}
+.faq-a strong { color: var(--navy); }
+
+/* === DOC FOOTER === */
+.doc-foot {
+  margin-top: 96px;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+}
+.doc-foot-quote {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  color: var(--ink-soft);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 24px;
+  max-width: 50ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+}
+
+/* === PRINT === */
+@media print {
+  body { font-size: 11pt; }
+  .toc, a.prereq:hover { transform: none; box-shadow: none; }
+  .step, .phase, .faq { break-inside: avoid; }
+  .phase-head { break-after: avoid; }
+  pre.code-block, code { background: white; color: var(--navy); border: 1px solid var(--rule); }
+  .page { padding: 0; max-width: none; }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 720px) {
+  .page { padding: 28px 20px 64px; }
+  .step { grid-template-columns: 60px 1fr; gap: 18px; padding: 24px 0; }
+  .step-num { font-size: 42px; }
+  .hero-stats { gap: 22px; }
+  .hero-stat-value { font-size: 22px; }
+  .toc { gap: 10px; font-size: 9px; }
+  .faq-a { padding-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="doc-top">
+    <span class="doc-mark">Hub<em>Builder</em> &middot; Setup Guide</span>
+    <span class="doc-version">v1.0 &middot; For Instructors</span>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-eyebrow">For Instructors, By Instructors</div>
+    <h1 class="hero-title">A guide to building your <em>hub</em>.</h1>
+    <p class="hero-lede">From a folder of links to a beautiful, scannable course portal that students reach with a phone camera. About fifteen minutes, end to end.</p>
+    <div class="hero-stats">
+      <div>
+        <span class="hero-stat-label">Time</span>
+        <span class="hero-stat-value">~15 min</span>
+      </div>
+      <div>
+        <span class="hero-stat-label">Cost</span>
+        <span class="hero-stat-value">Free</span>
+      </div>
+      <div>
+        <span class="hero-stat-label">Code Required</span>
+        <span class="hero-stat-value">None</span>
+      </div>
+      <div>
+        <span class="hero-stat-label">Hosting</span>
+        <span class="hero-stat-value">GitHub Pages</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOC ============ -->
+  <nav class="toc">
+    <a href="#prereqs">What you'll need</a>
+    <span class="toc-sep">/</span>
+    <a href="#build">01 Build</a>
+    <span class="toc-sep">/</span>
+    <a href="#publish">02 Publish</a>
+    <span class="toc-sep">/</span>
+    <a href="#share">03 Share</a>
+    <span class="toc-sep">/</span>
+    <a href="#update">Updating</a>
+    <span class="toc-sep">/</span>
+    <a href="#faq">When things go sideways</a>
+  </nav>
+
+  <!-- ============ PREREQUISITES ============ -->
+  <section id="prereqs" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Before you begin</div>
+      <h2 class="phase-title">What you'll need.</h2>
+      <p class="phase-lede">Four things, all free. Gather them now and the rest takes minutes.</p>
+    </header>
+    <div class="prereqs">
+      <div class="prereq">
+        <div class="prereq-num">01</div>
+        <div class="prereq-title">The Builder file</div>
+        <div class="prereq-desc">course-hub-builder.html, shared by your colleague.</div>
+      </div>
+      <a class="prereq" href="https://github.com/signup" target="_blank" rel="noopener">
+        <div class="prereq-num">02</div>
+        <div class="prereq-title">A GitHub account</div>
+        <div class="prereq-desc">Free. Use your university email if possible.</div>
+        <div class="prereq-link">github.com/signup &rarr;</div>
+      </a>
+      <div class="prereq">
+        <div class="prereq-num">03</div>
+        <div class="prereq-title">Your course links</div>
+        <div class="prereq-desc">Lecture videos, notes, assignments, lab materials, kahoots, AI tools.</div>
+      </div>
+      <div class="prereq">
+        <div class="prereq-num">04</div>
+        <div class="prereq-title">A modern browser</div>
+        <div class="prereq-desc">Chrome, Safari, Firefox, or Edge. Any one works.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 1: BUILD ============ -->
+  <section id="build" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Phase 01 of 03</div>
+      <h2 class="phase-title">Build it.</h2>
+      <p class="phase-lede">Open the visual builder, fill in your course, drop your links into sections. Roughly five minutes.</p>
+    </header>
+
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <h3 class="step-title">Open the builder.</h3>
+        <p>Double-click <code>course-hub-builder.html</code>, or drag it into a browser tab. Nothing installs. Nothing connects to a server. The whole tool runs locally on your computer.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <h3 class="step-title">Fill in your course identity.</h3>
+        <p>On the <strong>Edit</strong> tab, complete the first block: course code, term, full title, a short tagline, your name, your institution. The tagline is the italic line that appears below the title on the published hub. Two sentences, max.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <h3 class="step-title">Add your entries, one section at a time.</h3>
+        <p>For each link, fill in the second block: title, section (Lecture Videos, Lecture Notes, Assignments, Lab Materials, Kahoots, AI Tools), an optional number or week label, the URL, and a short description. Click <strong>Add Entry</strong>.</p>
+        <div class="callout">
+          <div class="callout-label">Tip</div>
+          <div class="callout-body">If you already have a list of URLs prepared, click <strong>Bulk Paste URLs</strong>. Drop in one URL per line, optionally followed by <code>| Title</code>. Paste, done.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <h3 class="step-title">Preview what students will see.</h3>
+        <p>Click the <strong>Preview</strong> tab. You'll see the hero, the search bar, and the cards that lift on hover. If something looks off, jump back to <strong>Edit</strong> and adjust.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <h3 class="step-title">Export and save.</h3>
+        <p>Click the <strong>Export</strong> tab, then <strong>Download Hub HTML</strong>. A single file lands in your Downloads folder, named after your course code. This is the file you'll publish.</p>
+        <div class="callout">
+          <div class="callout-label">Also</div>
+          <div class="callout-body">Click <strong>Save Config (JSON)</strong> too. That tiny file lets you reopen the builder later, load it back in, and pick up exactly where you left off.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 2: PUBLISH ============ -->
+  <section id="publish" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Phase 02 of 03</div>
+      <h2 class="phase-title">Publish it.</h2>
+      <p class="phase-lede">GitHub Pages is free, fast, and gives you a clean URL. About five minutes the first time, two minutes after that.</p>
+    </header>
+
+    <div class="step">
+      <div class="step-num">06</div>
+      <div class="step-body">
+        <h3 class="step-title">Create a free GitHub account.</h3>
+        <p>If you already have one, skip ahead. Otherwise, go to <code>github.com/signup</code>. Use your university email if possible. Pick a clean username, ideally something like your last name. That username becomes part of your hub's web address.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">07</div>
+      <div class="step-body">
+        <h3 class="step-title">Create a new repository.</h3>
+        <p>Once logged in, go to <code>github.com/new</code>. Give the repository a clean, lowercase name with hyphens, like <code>psyc-301-fall-2026</code>. Set it to <strong>Public</strong>. Leave the "Add a README" box unchecked. Click <strong>Create repository</strong>.</p>
+        <div class="callout">
+          <div class="callout-label">Note</div>
+          <div class="callout-body">Public means the source HTML is viewable by anyone who finds the repo. For course materials this is generally fine. If you have anything sensitive (unreleased exam answers, FERPA-protected data), see <a href="#faq" style="color: var(--terra);">the FAQ</a>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">08</div>
+      <div class="step-body">
+        <h3 class="step-title">Rename your file, then upload.</h3>
+        <p>On your computer, rename the downloaded file to <code>index.html</code> (lowercase, no extra characters). On the empty repo page, click the <strong>uploading an existing file</strong> link. Drag your renamed file into the upload area. Scroll down and click <strong>Commit changes</strong>.</p>
+        <div class="callout callout-warn">
+          <div class="callout-label">Why</div>
+          <div class="callout-body">GitHub serves <code>index.html</code> as the default page when a visitor opens your URL. Any other filename means students see a folder listing instead of your hub.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">09</div>
+      <div class="step-body">
+        <h3 class="step-title">Turn on GitHub Pages.</h3>
+        <p>Click the <strong>Settings</strong> tab at the top of the repo. In the left sidebar, click <strong>Pages</strong>. Under "Source", select <strong>Deploy from a branch</strong>. Under "Branch", choose <strong>main</strong> and <strong>/ (root)</strong>. Click <strong>Save</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">10</div>
+      <div class="step-body">
+        <h3 class="step-title">Wait a minute, then grab your URL.</h3>
+        <p>GitHub takes 30 to 60 seconds to publish. Refresh the Pages settings page. When the green banner appears, your URL will look something like:</p>
+        <pre class="code-block">https://yourname.github.io/psyc-301-fall-2026/</pre>
+        <p>Click it. Your hub is live on the internet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 3: SHARE ============ -->
+  <section id="share" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Phase 03 of 03</div>
+      <h2 class="phase-title">Share it.</h2>
+      <p class="phase-lede">A QR code on the syllabus, the first slide of every lecture, the office door. Same code, every term, until you change the URL.</p>
+    </header>
+
+    <div class="step">
+      <div class="step-num">11</div>
+      <div class="step-body">
+        <h3 class="step-title">Generate a QR code.</h3>
+        <p>Use any free QR generator. Three reliable options:</p>
+        <p><strong>qrcode.show</strong> &middot; type your URL after the slash, like <code>qrcode.show/yourname.github.io/psyc-301</code>, and the QR appears instantly.<br>
+        <strong>Chrome's built-in tool</strong> &middot; right-click the address bar on your hub page and select "Create QR code".<br>
+        <strong>qr-code-generator.com</strong> &middot; paste your URL, download the PNG.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">12</div>
+      <div class="step-body">
+        <h3 class="step-title">Put the QR everywhere.</h3>
+        <p>Drop it on the syllabus. The first slide of every lecture. The back of a printed handout. Your office door. Inside the front cover of the lab manual.</p>
+        <p>The QR encodes the URL itself. As long as the URL stays the same, the same QR keeps working forever. No expiration. No per-scan cost. No tracking pixel.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">13</div>
+      <div class="step-body">
+        <h3 class="step-title">Tell students how to use it.</h3>
+        <p>"Scan the QR. Tap a card. The link opens." That's the entire instruction set. No app, no login, no account, no software to install.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ UPDATING ============ -->
+  <section id="update" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Mid-semester</div>
+      <h2 class="phase-title">Updating later.</h2>
+      <p class="phase-lede">Add a new lecture, swap an assignment, restructure a section. The hub updates in under a minute.</p>
+    </header>
+
+    <div class="step">
+      <div class="step-num">A</div>
+      <div class="step-body">
+        <h3 class="step-title">Reopen the builder.</h3>
+        <p>Open <code>course-hub-builder.html</code>, go to the <strong>Export</strong> tab, click <strong>Load Config (JSON)</strong>, and pick the JSON you saved earlier. Everything reappears.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">B</div>
+      <div class="step-body">
+        <h3 class="step-title">Edit, re-save, re-export.</h3>
+        <p>Make your changes in the Edit tab. Click <strong>Save Config (JSON)</strong> to overwrite the old config. Click <strong>Download Hub HTML</strong> for a fresh copy of the hub. Rename it to <code>index.html</code> again.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">C</div>
+      <div class="step-body">
+        <h3 class="step-title">Replace the file on GitHub.</h3>
+        <p>Go to your repo, click your existing <code>index.html</code>, click the trash icon, commit. Then upload the new <code>index.html</code> the same way you did the first time. GitHub redeploys in about a minute.</p>
+        <div class="callout">
+          <div class="callout-label">Same QR</div>
+          <div class="callout-body">Your URL hasn't changed, so the QR codes you've already printed and posted keep working. Students just see the new content next time they scan.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq" class="phase">
+    <header class="phase-head">
+      <div class="phase-eyebrow">Troubleshooting</div>
+      <h2 class="phase-title">When things go sideways.</h2>
+      <p class="phase-lede">A short list of the issues that come up most often and how to fix them in under a minute.</p>
+    </header>
+
+    <div class="faq-list">
+      <div class="faq">
+        <div class="faq-q">My GitHub Pages URL gives a 404.</div>
+        <div class="faq-a">Wait a full minute after enabling Pages. If still no luck, check the filename: it must be exactly <code>index.html</code>, all lowercase. <code>Index.html</code>, <code>INDEX.HTML</code>, and <code>index.HTML</code> all fail. Also confirm the repo is set to <strong>Public</strong>, not Private.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">My links open the GitHub source code instead of the page.</div>
+        <div class="faq-a">You're using a <code>github.com/user/repo/blob/...</code> URL. Those open GitHub's file viewer, not the rendered page. To get a rendered HTML page, host that file on its own GitHub Pages site too, or wrap a raw URL with <code>htmlpreview.github.io</code>.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">My Drive links ask students for permission.</div>
+        <div class="faq-a">On the Drive file, click <strong>Share</strong>, change "General access" to <strong>Anyone with the link</strong>, role <strong>Viewer</strong>. Save. Now the link works for anyone with no login.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">I want to use my own domain instead of yourname.github.io.</div>
+        <div class="faq-a">In the repo's Pages settings, scroll to <strong>Custom domain</strong>. Enter your domain (like <code>course.myname.edu</code>). Then add a CNAME record at your DNS provider pointing to <code>yourname.github.io</code>. Free SSL is configured automatically through Let's Encrypt.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">I want a private hub that only enrolled students can see.</div>
+        <div class="faq-a">GitHub Pages on the free plan requires a public repository. If that's a deal-breaker, two options: <strong>GitHub Pro</strong> (about $4 per month) allows private Pages, or host the file inside Kajabi as a custom HTML block, where access is gated by your existing course enrollment.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">A colleague wants to use this. What do I send them?</div>
+        <div class="faq-a">Two files: <code>course-hub-builder.html</code> and this guide. They open the builder, follow the guide, end up with their own URL and QR. They never need to interact with your repo.</div>
+      </div>
+
+      <div class="faq">
+        <div class="faq-q">Will my hub keep working after the semester ends?</div>
+        <div class="faq-a">Yes, indefinitely. GitHub Pages doesn't expire. The only soft limits are 1 GB of repo size and 100 GB of bandwidth per month, neither of which you will come close to with a hub of links.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="doc-foot">
+    <p class="doc-foot-quote">A good hub disappears. The student opens the page, finds what they need, gets back to thinking. That's the whole job.</p>
+    <p>End of Guide</p>
+  </footer>
+
+</div>
+</body>
+</html>
